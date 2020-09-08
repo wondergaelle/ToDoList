@@ -64,7 +64,7 @@
         },
         // compteur de tache
         computed: {
-            // prend la liste et fait un filtre dessus et retourne les cons complétées
+            // prend la liste et fait un filtre dessus et retourne les complétées
             remaining() {
                 return this.todos.filter(todo => !todo.completed).length
             },
