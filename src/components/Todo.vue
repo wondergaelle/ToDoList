@@ -23,6 +23,7 @@
                     </div>
                 </li>
             </ul>
+
         </div>
         <!--v-show permet de faire disparaitre le footer lorsque toutes les tâches sont supprimées ( propriété hasTodo permet de faire réapparaire-->
         <footer class="footer" v-show="hasTodos">
@@ -36,6 +37,8 @@
                 <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">> Faites</a>
                 </li>
             </ul>
+            <!--le v-show fait apparaitre le button lorsque les tâches sont réalisées-->
+            <button class="clear-completed" v-show="completed" @click.prevent="deleteCompleted"> Supprimer les tâches finies</button>
         </footer>
     </section>
 
@@ -68,9 +71,13 @@
             },
             deleteTodo(todo) {
                 this.todos = this.todos.filter(i => i != todo)
+            },
+            // suppresion des tâches réalisées
+            deleteCompleted() {
+                this.todos = this.todos.filter(todo => !todo.completed)
             }
         },
-        // compteur de tache avec cette propriété ça peut servir d'avoir getter & setter
+        // compteur de tâches, avec cette propriété ça peut servir d'avoir getter & setter
         computed: {
             // allDone est dans un v-model qui va avoir des getter et des setter ( évite de passer par une fonction ? )
             allDone: {
@@ -88,11 +95,15 @@
                     }
                 }
             },
-            // prend la liste et fait un filtre dessus et retourne les complétées
+            // méthode pour comptabiliser le nbre de taches
             remaining() {
                 return this.todos.filter(todo => !todo.completed).length
             },
-            hasTodos(){
+            // prend la liste et fait un filtre dessus et retourne les complétées
+            completed() {
+                return this.todos.filter(todo => todo.completed).length
+            },
+            hasTodos() {
                 return this.todos.length > 0
             },
             // recupération des filtres
