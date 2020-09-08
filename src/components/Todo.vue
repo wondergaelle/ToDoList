@@ -2,7 +2,6 @@
     <section class="todoapp container">
         <header class="header">
             <h1>To Do List</h1>
-            <!--modification de la valeur new todo-->
             <!--keyup => permet  la validation avec entrée-->
             <input type="text" class="new-todo" placeholder="Ajouter une tâche" v-model="newTodo"
                    @keyup.enter="addTodo">
@@ -14,24 +13,28 @@
             <ul class="todo-list">
                 <!--boucle sur le li-->
                 <!--v-bind completed => permet d'indiquer que la tache est completée (change l'apparence)-->
-                <!--filteredTodos methode dans le state pour récuparation des filtres-->
+                <!--filteredTodos méthode dans le state pour récuparation des filtres-->
                 <li class="todo" v-for="todo in filteredTodos" v-bind:class="{completed: todo.completed}">
                     <div class="view">
                         <!--completed => permet de connaitre l'etat de complétion d'un champ-->
                         <input type="checkbox" v-model="todo.completed" class="toggle">
                         <label> {{todo.name}} </label>
+                        <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
                     </div>
                 </li>
             </ul>
         </div>
-        <footer class="footer">
+        <!--v-show permet de faire disparaitre le footer lorsque toutes les tâches sont supprimées ( propriété hasTodo permet de faire réapparaire-->
+        <footer class="footer" v-show="hasTodos">
             <!--la propriété remaining permet de compter le nbre de taches restantes-->
             <span class="todo-count"><strong>{{ remaining }}</strong> tâches à faire</span>
             <ul class="filters">
                 <!--selected = element actif-->
                 <li><a href="#" :class="{selected: filter === 'all'}" @click.prevent="filter= 'all'"> Toutes</a></li>
-                <li><a href="#" :class="{selected: filter === 'todo'}"@click.prevent="filter = 'todo'">> A faire</a></li>
-                <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">> Faites</a></li>
+                <li><a href="#" :class="{selected: filter === 'todo'}" @click.prevent="filter = 'todo'">> A faire</a>
+                </li>
+                <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">> Faites</a>
+                </li>
             </ul>
         </footer>
     </section>
@@ -49,7 +52,7 @@
                 }],
                 newTodo: '',
                 // conservation dans le state du filtre au niveau du template
-                filter:'all'
+                filter: 'all'
             }
         },
         methods: {
@@ -62,27 +65,38 @@
 
                 // une fois la tache poussée ==> le champ se vide
                 this.newTodo = ''
+            },
+            deleteTodo(todo) {
+                this.todos = this.todos.filter(i => i != todo)
             }
         },
-        // compteur de tache
+        // compteur de tache avec cette propriété ça peut servir d'avoir getter & setter
         computed: {
             // allDone est dans un v-model qui va avoir des getter et des setter ( évite de passer par une fonction ? )
-            allDone : {
+            allDone: {
                 // le get permet de définir comment est la proriété
-                get(){
-
+                get() {
+                    // pour eviter qu \'il reste coché en permanence ( car reflète l'état du remaining)
+                    return this.remaining === 0
                 },
                 // le set permet de dire ce que je dois faire lorsque la propriété est modifiée
                 set(value) {
-                    console.log('value', value)
+                    if (value === true) {
+                        this.todos.forEach(todo => {
+                            todo.completed = value
+                        })
+                    }
                 }
             },
             // prend la liste et fait un filtre dessus et retourne les complétées
             remaining() {
                 return this.todos.filter(todo => !todo.completed).length
             },
+            hasTodos(){
+                return this.todos.length > 0
+            },
             // recupération des filtres
-            filteredTodos(){
+            filteredTodos() {
                 if (this.filter === 'todo') {
                     return this.todos.filter(todo => !todo.completed)
                 } else if (this.filter === 'done') {
