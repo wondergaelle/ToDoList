@@ -1,12 +1,15 @@
 # ToDoList
 ## Build Setup
 
+``` install vite
+# npm init vite-app <project-name>
+# cd <project-name>
 ``` bash
-# install dependencies
+# installer les dépendances
 npm install
 
-# serve with hot reload at localhost:8080
+# rechargement localhost:3000
 npm run dev
 
-# build for production with minification
+# build pour la production et optimisation
 npm run build

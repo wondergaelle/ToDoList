@@ -59,16 +59,16 @@
             }
         },
         methods: {
-            // <!--ajout d'une tache a la liste-->
+            // <!--ajout d'une tâche a la liste-->
             addTodo() {
                 this.todos.push({
                     completed: false,
-                    name: this.newTodo
-                })
-
+                    name: this.newTodo,
+                }),
                 // une fois la tache poussée ==> le champ se vide
                 this.newTodo = ''
             },
+
             deleteTodo(todo) {
                 this.todos = this.todos.filter(i => i != todo)
             },
