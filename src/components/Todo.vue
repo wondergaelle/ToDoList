@@ -9,6 +9,8 @@
         </header>
 
         <div class="main">
+            <input type="checkbox" class="toggle-all" v-model="allDone">
+            <!--bouton qui peret de cocher toutes les taches => classe associée a une propriété de la vue-->
             <ul class="todo-list">
                 <!--boucle sur le li-->
                 <!--v-bind completed => permet d'indiquer que la tache est completée (change l'apparence)-->
@@ -64,6 +66,17 @@
         },
         // compteur de tache
         computed: {
+            // allDone est dans un v-model qui va avoir des getter et des setter ( évite de passer par une fonction ? )
+            allDone : {
+                // le get permet de définir comment est la proriété
+                get(){
+
+                },
+                // le set permet de dire ce que je dois faire lorsque la propriété est modifiée
+                set(value) {
+                    console.log('value', value)
+                }
+            },
             // prend la liste et fait un filtre dessus et retourne les complétées
             remaining() {
                 return this.todos.filter(todo => !todo.completed).length
