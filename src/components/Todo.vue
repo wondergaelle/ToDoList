@@ -1,45 +1,66 @@
 <template>
-  <section class="todoapp container">
-    <header class="header">
-      <h1>To Do List</h1>
-      <input type="text" class="new-todo" placeholder="Ajouter une tâche" v-model="newTodo" @keyup.enter="addTodo">
-    </header>
+    <section class="todoapp container">
+        <header class="header">
+            <h1>To Do List</h1>
+            <!--modification de la valeur new todo-->
+            <!--keyup => permet  la validation avec entrée-->
+            <input type="text" class="new-todo" placeholder="Ajouter une tâche" v-model="newTodo"
+                   @keyup.enter="addTodo">
+        </header>
 
-    <div class="main">
-      <ul class="todo-list">
-        <li class="todo" v-for="todo in todos">
-          <div class="view">
-            <label >{{todo.name}}</label>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-  </section>
+        <div class="main">
+            <ul class="todo-list">
+                <!--boucle sur le li-->
+                <!--v-bind completed => permet d'indiquer que la tache est completée (change l'apparence)-->
+                <li class="todo" v-for="todo in todos" v-bind:class="{completed: todo.completed}">
+                    <div class="view">
+                        <!--completed => permet de connaitre l'etat de complétion d'un champ-->
+                        <input type="checkbox" v-model="todo.completed" class="toggle">
+                        <label> {{todo.name}} </label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <footer class="footer">
+            <!--la propriété remaining permet de compter le nbre de taches restantes-->
+            <span class="todo-count"><strong>{{ remaining }}</strong> tâches à faire</span>
+        </footer>
+    </section>
 
 </template>
 
 <script>
-export default {
-  data(){
-    return{
-      todos:[{
-        name: 'tâche de test',
-        completed:false
-      }],
-      newTodo:''
+    export default {
+// <!--declaration du state avec les propriétés-->
+        data() {
+            return {
+                todos: [{
+                    name: 'tâche de test',
+                    completed: false
+                }],
+                newTodo: ''
+            }
+        },
+        methods: {
+            // <!--ajout d'une tache a la liste-->
+            addTodo() {
+                this.todos.push({
+                    completed: false,
+                    name: this.newTodo
+                })
+
+                // une fois la tache poussée ==> le champ se vide
+                this.newTodo = ''
+            }
+        },
+        // compteur de tache
+        computed:{
+            // prend la liste et fait un filtre dessus et retourne les cons complétées
+            remaining(){
+                return this.todos.filter( todo => !todo.completed ).length
+            }
+        }
     }
-  },
-  methods:{
-    addTodo(){
-      this.todos.push({
-        completed: false,
-        name: this.newTodo
-      })
-      this.newTodo = ''
-    }
-  }
-}
 </script>
 
 <style src="./todo.css"></style>
